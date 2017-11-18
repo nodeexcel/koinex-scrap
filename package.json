@@ -1,0 +1,30 @@
+{
+  "name": "koinex",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashutoshs998/koinex_scrap.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashutoshs998/koinex_scrap/issues"
+  },
+  "homepage": "https://github.com/ashutoshs998/koinex_scrap#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "moment-timezone": "^0.5.14",
+    "mongoose": "^4.13.4",
+    "node-cron": "^1.2.1",
+    "phantomjs": "^2.1.7",
+    "spooky": "^0.2.5",
+    "tiny-jsonrpc": "^2.0.1"
+  }
+}
