@@ -55,6 +55,7 @@ function doScrap(URL, callback) {
 
     spooky.on('output', function(body) {
         var prices = [];
+        //below variables are used for storing data for different currencies which is scrapped every minute
         var BTC = {
             "open": body.prices.BTC,
             "volume": body.stats.BTC.vol_24hrs,
@@ -81,33 +82,48 @@ function doScrap(URL, callback) {
             "BCH": body.prices.BCH
         };
         prices.push(BTC, ETH, XRP, LTC, BCH);
+
+        //below code is for getting current time and time before 2 minute
         var date_time = moment(new Date()).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm');
         var to_date = moment(new Date().getTime() - 1000 * 60 * 2).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm');
+
+        //below code is for storing currencies and date, coming every minute to store in db
         koinex_data = new db.fetch({
             price: prices,
             date: date_time,
         })
+
+        //below code is for finding the value for high, low, open ,close data
+        // query to find the data for last two minute
         db.fetch.find({ date: { $gte: to_date, $lt: date_time, } }).sort({ _id: -1 }).exec(function(err, last_added) {
+            //if data found for last two minutes then it will start to calculate required data else it will not calculate
             if (last_added.length == 2) {
+                //first save the data coming every minute in db
                 koinex_data.save(function(err, result) {
                     if (err) {
                         console.log(err)
                     } else {
                         for (var k in last_added[1].price) {
                             if (k < 5) {
+                                //if price before two minutes are less then the price before one minute, then store the price before two minutes as the low, and price before one minute as high
                                 if (last_added[1].price[k].open < last_added[0].price[k].open) {
                                     last_added[1].price[k].low = last_added[1].price[k].open;
                                     last_added[1].price[k].high = last_added[0].price[k].open;
-                                } else {
+                                }
+                                //if price before two minutes are greater then the price before one minute, then store price before two minutes as the high, and price before one minute as low 
+                                else {
                                     last_added[1].price[k].low = last_added[0].price[k].open;
                                     last_added[1].price[k].high = last_added[1].price[k].open;
                                 }
+                                //store the open value of data coming in current minute as the closing value for the data before two minute
                                 last_added[1].price[k].close = result.price[k].open;
                             }
                         }
+                        //get the calculated data to store in db
                         calculated_data = new db.get_detailed_data({
                             calculated: last_added[1]
                         })
+                        //save data in db after calculation in differnet collection
                         calculated_data.save(function(err, take) {
                             if (err) {
                                 console.log(err)
@@ -115,7 +131,9 @@ function doScrap(URL, callback) {
                         })
                     }
                 })
-            } else {
+            }
+            //if data is not found for last two minutes then no need to calculate just store the data coming every minute in db 
+            else {
                 koinex_data.save(function(err, result) {
                     if (err) {
                         console.log(err);
