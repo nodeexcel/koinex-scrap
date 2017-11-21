@@ -11,7 +11,17 @@ var koinex_data = mongoose.Schema({
     collection: 'koinex_data',
     strict: true
 });
+
+var calculated_data = mongoose.Schema({
+    calculated: { type: Array },
+    // date: { type: String },
+}, {
+    collection: 'calculated_data',
+    strict: true
+});
 var get_data = conn.model("get_data", koinex_data);
+var get_desired = conn.model("get_desired", calculated_data);
 module.exports = {
     fetch: get_data,
+    get_detailed_data: get_desired,
 }
