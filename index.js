@@ -171,19 +171,6 @@ router.get('/seperate_collections', function(req, res, next) {
     })
 })
 
-router.get('/fetch/koinex', function(req, res, next) {
-    db.get_detailed_data.find({}).exec(function(err, data) {
-        if (err) {
-            next(err);
-        } else if (data) {
-            var result = data.filter(function(el, index) {
-                return index % 2 === 0;
-            });
-            res.json({ error: 0, message: "data found", data: result });
-        }
-    })
-});
-
 try {
     var Spooky = require('spooky');
 } catch (e) {
