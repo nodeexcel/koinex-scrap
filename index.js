@@ -103,7 +103,7 @@ router.get('/get_bch/:start_date/:end_date', function(req, res, next) {
 })
 
 router.get('/seperate_collections', function(req, res, next) {
-    db.get_detailed_data.find({ is_processed: { "$exists": false } }).limit(2).exec(function(err, data) {
+    db.get_detailed_data.find({ is_processed: { "$exists": false } }).limit(500).exec(function(err, data) {
         if (err) {
             console.log(err)
             next(err);
