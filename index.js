@@ -22,6 +22,8 @@ router.get('/get_btc/:start_date/:end_date', function(req, res, next) {
                 return index % 2 === 0;
             });
             res.json({ error: 0, message: "data found", data: result });
+        } else {
+            res.json({ error: 1, message: "data not found", data: result });
         }
     })
 })
@@ -41,6 +43,8 @@ router.get('/get_eth/:start_date/:end_date', function(req, res, next) {
                 return index % 2 === 0;
             });
             res.json({ error: 0, message: "data found", data: result });
+        } else {
+            res.json({ error: 1, message: "data not found", data: result });
         }
     })
 })
@@ -60,6 +64,8 @@ router.get('/get_xrp/:start_date/:end_date', function(req, res, next) {
                 return index % 2 === 0;
             });
             res.json({ error: 0, message: "data found", data: result });
+        } else {
+            res.json({ error: 1, message: "data not found", data: result });
         }
     })
 })
@@ -79,6 +85,8 @@ router.get('/get_ltc/:start_date/:end_date', function(req, res, next) {
                 return index % 2 === 0;
             });
             res.json({ error: 0, message: "data found", data: result });
+        } else {
+            res.json({ error: 1, message: "data not found", data: result });
         }
     })
 })
@@ -98,6 +106,8 @@ router.get('/get_bch/:start_date/:end_date', function(req, res, next) {
                 return index % 2 === 0;
             });
             res.json({ error: 0, message: "data found", data: result });
+        } else {
+            res.json({ error: 1, message: "data not found", data: result });
         }
     })
 })
@@ -275,59 +285,59 @@ function doScrap(URL, callback) {
                                 }
                                 //store the open value of data coming in current minute as the closing value for the data before two minute
                                 last_added[1].price[k].close = result.price[k].open;
-                                // last_added[1].price[k].date = change_date;
-                                // if (last_added[1].price[k].BTC) {
-                                //     BTC_data = new db.BTC_data(last_added[1].price[k]);
-                                //     BTC_data.save(function(err, take) {
-                                //         if (err) {
-                                //             console.log(err)
-                                //         }
-                                //     })
-                                // }
-                                // if (last_added[1].price[k].ETH) {
-                                //     ETH_data = new db.ETH_data(last_added[1].price[k]);
-                                //     ETH_data.save(function(err, take) {
-                                //         if (err) {
-                                //             console.log(err)
-                                //         }
-                                //     })
-                                // }
-                                // if (last_added[1].price[k].XRP) {
-                                //     XRP_data = new db.XRP_data(last_added[1].price[k]);
-                                //     XRP_data.save(function(err, take) {
-                                //         if (err) {
-                                //             console.log(err)
-                                //         }
-                                //     })
-                                // }
-                                // if (last_added[1].price[k].LTC) {
-                                //     LTC_data = new db.LTC_data(last_added[1].price[k]);
-                                //     LTC_data.save(function(err, take) {
-                                //         if (err) {
-                                //             console.log(err)
-                                //         }
-                                //     })
-                                // }
-                                // if (last_added[1].price[k].BCH) {
-                                //     BCH_data = new db.BCH_data(last_added[1].price[k]);
-                                //     BCH_data.save(function(err, take) {
-                                //         if (err) {
-                                //             console.log(err)
-                                //         }
-                                //     })
-                                // }
+                                last_added[1].price[k].date = change_date;
+                                if (last_added[1].price[k].BTC) {
+                                    BTC_data = new db.BTC_data(last_added[1].price[k]);
+                                    BTC_data.save(function(err, take) {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                    })
+                                }
+                                if (last_added[1].price[k].ETH) {
+                                    ETH_data = new db.ETH_data(last_added[1].price[k]);
+                                    ETH_data.save(function(err, take) {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                    })
+                                }
+                                if (last_added[1].price[k].XRP) {
+                                    XRP_data = new db.XRP_data(last_added[1].price[k]);
+                                    XRP_data.save(function(err, take) {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                    })
+                                }
+                                if (last_added[1].price[k].LTC) {
+                                    LTC_data = new db.LTC_data(last_added[1].price[k]);
+                                    LTC_data.save(function(err, take) {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                    })
+                                }
+                                if (last_added[1].price[k].BCH) {
+                                    BCH_data = new db.BCH_data(last_added[1].price[k]);
+                                    BCH_data.save(function(err, take) {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                    })
+                                }
                             }
                         }
-                        //get the calculated data to store in db
-                        calculated_data = new db.get_detailed_data({
-                            calculated: last_added[1]
-                        })
-                        //save data in db after calculation in differnet collection
-                        calculated_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
+                        // //get the calculated data to store in db
+                        // calculated_data = new db.get_detailed_data({
+                        //     calculated: last_added[1]
+                        // })
+                        // //save data in db after calculation in differnet collection
+                        // calculated_data.save(function(err, take) {
+                        //     if (err) {
+                        //         console.log(err)
+                        //     }
+                        // })
                     }
                 })
             }
