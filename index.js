@@ -108,64 +108,69 @@ router.get('/seperate_collections', function(req, res, next) {
             console.log(err)
             next(err);
         } else if (data) {
-            for (var k in data) {
-                var prices = data[k].calculated[0].price;
-                var change_date = moment(new Date(data[k].calculated[0].date)).tz('Asia/Kolkata').format()
-                for (var a in prices) {
-                    prices[a].date = change_date;
-                    if (prices[a].BTC) {
-                        var separate_prices = { 'BTC': prices[a].BTC, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
-                        BTC_data = new db.BTC_data(separate_prices);
-                        BTC_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
+            if (data.length != 0) {
+                for (var k in data) {
+                    var prices = data[k].calculated[0].price;
+                    var change_date = moment(new Date(data[k].calculated[0].date)).tz('Asia/Kolkata').format()
+                    for (var a in prices) {
+                        prices[a].date = change_date;
+                        if (prices[a].BTC) {
+                            var separate_prices = { 'BTC': prices[a].BTC, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
+                            BTC_data = new db.BTC_data(separate_prices);
+                            BTC_data.save(function(err, take) {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                        }
+                        if (prices[a].ETH) {
+                            var separate_prices = { 'ETH': prices[a].ETH, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
+                            ETH_data = new db.ETH_data(separate_prices);
+                            ETH_data.save(function(err, take) {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                        }
+                        if (prices[a].XRP) {
+                            var separate_prices = { 'XRP': prices[a].XRP, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
+                            XRP_data = new db.XRP_data(separate_prices);
+                            XRP_data.save(function(err, take) {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                        }
+                        if (prices[a].LTC) {
+                            var separate_prices = { 'LTC': prices[a].LTC, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
+                            LTC_data = new db.LTC_data(separate_prices);
+                            LTC_data.save(function(err, take) {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                        }
+                        if (prices[a].BCH) {
+                            var separate_prices = { 'BCH': prices[a].BCH, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
+                            BCH_data = new db.BCH_data(separate_prices);
+                            BCH_data.save(function(err, take) {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                        }
                     }
-                    if (prices[a].ETH) {
-                        var separate_prices = { 'ETH': prices[a].ETH, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
-                        ETH_data = new db.ETH_data(separate_prices);
-                        ETH_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
-                    }
-                    if (prices[a].XRP) {
-                        var separate_prices = { 'XRP': prices[a].XRP, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
-                        XRP_data = new db.XRP_data(separate_prices);
-                        XRP_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
-                    }
-                    if (prices[a].LTC) {
-                        var separate_prices = { 'LTC': prices[a].LTC, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
-                        LTC_data = new db.LTC_data(separate_prices);
-                        LTC_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
-                    }
-                    if (prices[a].BCH) {
-                        var separate_prices = { 'BCH': prices[a].BCH, 'volume': prices[a].volume, 'open': prices[a].open, 'low': prices[a].low, 'high': prices[a].high, 'close': prices[a].close, 'date': change_date }
-                        BCH_data = new db.BCH_data(separate_prices);
-                        BCH_data.save(function(err, take) {
-                            if (err) {
-                                console.log(err)
-                            }
-                        })
-                    }
-                }
-                db.get_detailed_data.update({ _id: data[k]._id }, { $set: { 'is_processed': 1 } },
-                    function(err, result) {
+                    db.get_detailed_data.update({ _id: data[k]._id }, { $set: { 'is_processed': 1 } }, function(err, result) {
+
 
                     })
-                if (k == data.length - 1) {
-                    res.json({ error: 0, message: "inserted" });
+                    if (k == data.length - 1) {
+                        res.json({ error: 0, message: "inserted" });
+                    }
+
                 }
+            } else {
+                res.json({ error: 0, message: "no more data found" });
             }
         }
     })

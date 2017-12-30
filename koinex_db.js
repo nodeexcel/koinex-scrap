@@ -16,7 +16,7 @@ var calculated_data = mongoose.Schema({
     calculated: { type: Array },
 }, {
     collection: 'calculated_data',
-    strict: true
+    strict: false
 });
 
 var BTC = mongoose.Schema({
