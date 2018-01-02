@@ -12,13 +12,6 @@ var koinex_data = mongoose.Schema({
     strict: true
 });
 
-var calculated_data = mongoose.Schema({
-    calculated: { type: Array },
-}, {
-    collection: 'calculated_data',
-    strict: false
-});
-
 var BTC = mongoose.Schema({
     date: { type: String },
     close: { type: String },
@@ -84,20 +77,18 @@ var BCH = mongoose.Schema({
     strict: true
 });
 
-var get_data = conn.model("get_data", koinex_data);
-var get_desired = conn.model("get_desired", calculated_data);
-var get_BTC = conn.model("get_BTC", BTC);
-var get_ETH = conn.model("get_ETH", ETH);
-var get_XRP = conn.model("get_XRP", XRP);
-var get_LTC = conn.model("get_LTC", LTC);
-var get_BCH = conn.model("get_BCH", BCH);
+var koinex_data = conn.model("koinex_data", koinex_data);
+var BTC = conn.model("BTC", BTC);
+var ETH = conn.model("ETH", ETH);
+var XRP = conn.model("XRP", XRP);
+var LTC = conn.model("LTC", LTC);
+var BCH = conn.model("BCH", BCH);
 
 module.exports = {
-    fetch: get_data,
-    get_detailed_data: get_desired,
-    BTC_data: get_BTC,
-    ETH_data: get_ETH,
-    XRP_data: get_XRP,
-    LTC_data: get_LTC,
-    BCH_data: get_BCH,
+    koinex_data: koinex_data,
+    BTC: BTC,
+    ETH: ETH,
+    XRP: XRP,
+    LTC: LTC,
+    BCH: BCH,
 }
