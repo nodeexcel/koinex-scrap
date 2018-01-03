@@ -13,65 +13,65 @@ var koinex_data = mongoose.Schema({
 });
 
 var BTC = mongoose.Schema({
-    date: { type: String },
-    close: { type: String },
-    high: { type: String },
-    low: { type: String },
-    open: { type: String },
-    volume: { type: String },
-    BTC: { type: String }
+    date: { type: Date },
+    close: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    open: { type: Number },
+    volume: { type: Number },
+    BTC: { type: Number }
 }, {
     collection: 'BTC',
     strict: true
 });
 
 var ETH = mongoose.Schema({
-    date: { type: String },
-    close: { type: String },
-    high: { type: String },
-    low: { type: String },
-    open: { type: String },
-    volume: { type: String },
-    ETH: { type: String }
+    date: { type: Date },
+    close: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    open: { type: Number },
+    volume: { type: Number },
+    ETH: { type: Number }
 }, {
     collection: 'ETH',
     strict: true
 });
 
 var XRP = mongoose.Schema({
-    date: { type: String },
-    close: { type: String },
-    high: { type: String },
-    low: { type: String },
-    open: { type: String },
-    volume: { type: String },
-    XRP: { type: String }
+    date: { type: Date },
+    close: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    open: { type: Number },
+    volume: { type: Number },
+    XRP: { type: Number }
 }, {
     collection: 'XRP',
     strict: true
 });
 
 var LTC = mongoose.Schema({
-    date: { type: String },
-    close: { type: String },
-    high: { type: String },
-    low: { type: String },
-    open: { type: String },
-    volume: { type: String },
-    LTC: { type: String }
+    date: { type: Date },
+    close: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    open: { type: Number },
+    volume: { type: Number },
+    LTC: { type: Number }
 }, {
     collection: 'LTC',
     strict: true
 });
 
 var BCH = mongoose.Schema({
-    date: { type: String },
-    close: { type: String },
-    high: { type: String },
-    low: { type: String },
-    open: { type: String },
-    volume: { type: String },
-    BCH: { type: String }
+    date: { type: Date },
+    close: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    open: { type: Number },
+    volume: { type: Number },
+    BCH: { type: Number }
 }, {
     collection: 'BCH',
     strict: true

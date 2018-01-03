@@ -56,6 +56,8 @@ cron.schedule('*/1 * * * *', function() {
                         console.log(err)
                     } else {
                         var change_date = moment(new Date(last_added[1].date)).tz('Asia/Kolkata').format()
+                        var splitDate = change_date.split(/-| |:|T/)
+                        var IST_date_obj = new Date(Date.UTC(splitDate[0], splitDate[1] - 1, splitDate[2], splitDate[3], splitDate[4], 0))
                         for (var k in last_added[1].price) {
                             if (k < 5) {
                                 //if price before two minutes are less then the price before one minute, then store the price before two minutes as the low, and price before one minute as high
@@ -70,7 +72,8 @@ cron.schedule('*/1 * * * *', function() {
                                 }
                                 //store the open value of data coming in current minute as the closing value for the data before two minute
                                 last_added[1].price[k].close = result.price[k].open;
-                                last_added[1].price[k].date = change_date;
+                                last_added[1].price[k].date = IST_date_obj;
+
                                 if (last_added[1].price[k].BTC) {
                                     BTC_data = new db.BTC(last_added[1].price[k]);
                                     BTC_data.save(function(err, take) {
