@@ -14,148 +14,35 @@ module.exports = {
             if (arrayChunks.length > 0) {
                 //storing the prices of first minute of a time interval, to use for further calculations
                 var prices = arrayChunks[0].price
-                //for calculating only desired currency
-                if (currency == 'BTC') {
-                    //calculating volume by getting difference between last iteration volume and current iteration volume
-                    //and storing the high,low and volume of last data in array
+                //calculating volume by getting difference between last iteration volume and current iteration volume
+                //and storing the high,low and volume of last data in array
+                for (var a in prices) {
                     if (result.length != 0) {
-                        result[result.length - 1].volume = prices[0].volume - volume;
+                        result[result.length - 1].volume = prices[a].volume - volume;
                         result[result.length - 1].high = high;
                         result[result.length - 1].low = low;
                     }
-
-                    for (var a in prices) {
-                        if (prices[a].BTC) {
-                            //initially storing open and date value of currencies
-                            var BTC = {
-                                "BTC_open": prices[a].BTC,
-                                "date": arrayChunks[0].date
-                            }
-                            var price_minutes = []
-                            //getting all currency prices in array to find high and low
-                            for (var k in arrayChunks) {
-                                price_minutes.push(arrayChunks[k].price[a].BTC)
-
-                            }
-                            //calculating values of max and min values for getting high and low.
-                            var high = _.max(price_minutes);
-                            var low = _.min(price_minutes);
-                            var volume = prices[a].volume;
-                            //if result array is not empty, then it will store the current price of currency as the closing price of last time interval
-                            if (result.length != 0) {
-                                result[result.length - 1].close = prices[a].BTC;
-                            }
-                            result.push(BTC)
+                    if (prices[a][currency]) {
+                        //initially storing open and date value of currencies
+                        var currency_data = {
+                            "open": prices[a][currency],
+                            "date": arrayChunks[0].date
                         }
-                    }
-                }
+                        var price_minutes = []
+                        //getting all currency prices in array to find high and low
+                        for (var k in arrayChunks) {
+                            price_minutes.push(arrayChunks[k].price[a][currency])
 
-                if (currency == 'ETH') {
-                    if (result.length != 0) {
-                        result[result.length - 1].high = high;
-                        result[result.length - 1].low = low;
-                        result[result.length - 1].volume = prices[1].volume - volume;
-                    }
-                    for (var a in prices) {
-                        if (prices[a].ETH) {
-                            var ETH = {
-                                "ETH_open": prices[a].ETH,
-                                "date": arrayChunks[0].date
-                            }
-                            var price_minutes = []
-                            for (var k in arrayChunks) {
-                                price_minutes.push(arrayChunks[k].price[1].ETH)
-
-                            }
-                            var high = _.max(price_minutes);
-                            var low = _.min(price_minutes);
-                            var volume = prices[a].volume;
-                            if (result.length != 0) {
-                                result[result.length - 1].close = prices[a].ETH
-                            }
-                            result.push(ETH)
                         }
-                    }
-                }
-
-                if (currency == 'XRP') {
-                    if (result.length != 0) {
-                        result[result.length - 1].high = high;
-                        result[result.length - 1].low = low;
-                        result[result.length - 1].volume = prices[2].volume - volume;
-                    }
-                    for (var a in prices) {
-                        if (prices[a].XRP) {
-                            var XRP = {
-                                "XRP_open": prices[a].XRP,
-                                "date": arrayChunks[0].date
-                            }
-                            var price_minutes = []
-                            for (var k in arrayChunks) {
-                                price_minutes.push(arrayChunks[k].price[a].XRP)
-                            }
-                            var high = _.max(price_minutes);
-                            var low = _.min(price_minutes);
-                            var volume = prices[a].volume;
-                            if (result.length != 0) {
-                                result[result.length - 1].close = prices[a].XRP
-                            }
-                            result.push(XRP)
+                        //calculating values of max and min values for getting high and low.
+                        var high = _.max(price_minutes);
+                        var low = _.min(price_minutes);
+                        var volume = prices[a].volume;
+                        //if result array is not empty, then it will store the current price of currency as the closing price of last time interval
+                        if (result.length != 0) {
+                            result[result.length - 1].close = prices[a][currency];
                         }
-                    }
-                }
-
-                if (currency == 'LTC') {
-                    if (result.length != 0) {
-                        result[result.length - 1].high = high;
-                        result[result.length - 1].low = low;
-                        result[result.length - 1].volume = prices[3].volume - volume;
-                    }
-                    for (var a in prices) {
-                        if (prices[a].LTC) {
-                            var LTC = {
-                                "LTC_open": prices[a].LTC,
-                                "date": arrayChunks[0].date
-                            }
-                            var price_minutes = []
-                            for (var k in arrayChunks) {
-                                price_minutes.push(arrayChunks[k].price[a].LTC)
-                            }
-                            var high = _.max(price_minutes);
-                            var low = _.min(price_minutes);
-                            var volume = prices[a].volume;
-                            if (result.length != 0) {
-                                result[result.length - 1].close = prices[a].LTC
-                            }
-                            result.push(LTC)
-                        }
-                    }
-                }
-
-                if (currency == 'BCH') {
-                    if (result.length != 0) {
-                        result[result.length - 1].high = high;
-                        result[result.length - 1].low = low;
-                        result[result.length - 1].volume = prices[4].volume - volume;
-                    }
-                    for (var a in prices) {
-                        if (prices[a].BCH) {
-                            var BCH = {
-                                "LTC_open": prices[a].BCH,
-                                "date": arrayChunks[0].date
-                            }
-                            var price_minutes = []
-                            for (var k in arrayChunks) {
-                                price_minutes.push(arrayChunks[k].price[a].BCH)
-                            }
-                            var high = _.max(price_minutes);
-                            var low = _.min(price_minutes);
-                            var volume = prices[a].volume;
-                            if (result.length != 0) {
-                                result[result.length - 1].close = prices[a].BCH
-                            }
-                            result.push(BCH)
-                        }
+                        result.push(currency_data)
                     }
                 }
             }
