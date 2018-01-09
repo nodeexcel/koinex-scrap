@@ -4,14 +4,16 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 mongoose.Promise = global.Promise;
 var conn = mongoose.connect('mongodb://localhost/koinex');
+
 var koinex_data = mongoose.Schema({
     price: { type: Array },
-    date: { type: String },
+    date: { type: Date },
 }, {
     collection: 'koinex_data',
-    strict: true
+    strict: false
 });
-var get_data = conn.model("get_data", koinex_data);
+
+var koinex_data = conn.model("koinex_data", koinex_data);
 module.exports = {
-    fetch: get_data,
+    koinex_data: koinex_data,
 }

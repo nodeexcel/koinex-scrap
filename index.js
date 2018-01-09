@@ -1,85 +1,45 @@
-var express = require('express');
-var app = express();
-var router = express.Router();
-var db = require('./koinex_db');
+var db = require('./db');
 var phantomjs = require('phantomjs');
 var moment = require('moment-timezone');
 var cron = require('node-cron');
-
-router.get('/fetch/koinex', function(req, res, next) {
-    db.fetch.find({}).exec(function(err, data) {
-        if (err) {
-            next(err);
-        } else if (data) {
-            res.json({ error: 0, message: "data found", data: data });
-        }
-    })
-});
-
-try {
-    var Spooky = require('spooky');
-} catch (e) {
-    var Spooky = require('../lib/spooky');
-}
-
-function doScrap(URL, callback) {
-    var spooky = new Spooky({
-        child: {
-            transport: 'http'
-        },
-        casper: {
-            logLevel: 'debug',
-            verbose: true,
-        }
-    }, function(err) {
-        if (err) {
-            e = new Error('Failed to initialize SpookyJS');
-            e.details = err;
-            throw e;
-        }
-        spooky.start('https://koinex.in/api/ticker');
-        spooky.then(function() {
-            this.emit('output', this.evaluate(function() {
-                return JSON.parse(document.body.textContent);
-            }));
-        });
-        spooky.run();
-    });
-    spooky.on('error', function(e, stack) {
-        // console.error(e);
-        if (stack) {}
-    });
-    spooky.on('console', function(line) {});
-
-    spooky.on('output', function(body) {
-        var prices = {
-            "BTC/INR": body.prices.BTC,
-            "ETH/INR": body.prices.ETH,
-            "XRP/INR": body.prices.XRP,
-            "LTC/INR": body.prices.LTC,
-            "BCH/INR": body.prices.BCH
-        };
-        var date_time = moment(new Date()).tz('Asia/Kolkata');
-        koinex_data = new db.fetch({
-            price: prices,
-            date: date_time,
-        })
-        koinex_data.save(function(err) {
-            if (err) {
-                res.status(400).json({ error: 1, message: "check email or password" });
-            }
-        })
-        callback(prices);
-    });
-    spooky.on('log', function(log) {
-        if (log.space === 'remote') {
-            console.log(log.message.replace(/ \- .*/, ''));
-        }
-    });
-}
+var spooky_doscrap = require('./service/spooky.js');
 
 cron.schedule('*/1 * * * *', function() {
-    doScrap('', function(output) {})
-});
+    spooky_doscrap.scraping('', function(body) {
+        var prices = [];
+        //below variables are used for storing data for different currencies which is scrapped every minute
+        var BTC = {
+            "volume": body.stats.BTC.vol_24hrs,
+            "BTC": body.prices.BTC
+        };
+        var ETH = {
+            "volume": body.stats.ETH.vol_24hrs,
+            "ETH": body.prices.ETH
+        };
+        var XRP = {
+            "volume": body.stats.XRP.vol_24hrs,
+            "XRP": body.prices.XRP
+        };
+        var LTC = {
+            "volume": body.stats.LTC.vol_24hrs,
+            "LTC": body.prices.LTC
+        };
+        var BCH = {
+            "volume": body.stats.BCH.vol_24hrs,
+            "BCH": body.prices.BCH
+        };
+        prices.push(BTC, ETH, XRP, LTC, BCH);
 
-module.exports = router;
+        var date_time = moment().tz('Asia/Kolkata');
+        var dateTime = new Date(Date.UTC(date_time.get('year'), date_time.get('month'), date_time.get('date'), date_time.get('hour'), date_time.get('minute')))
+        koinex_data = new db.koinex_data({
+            price: prices,
+            date: dateTime,
+        })
+        koinex_data.save(function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+        })
+    })
+});
