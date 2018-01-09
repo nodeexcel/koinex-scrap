@@ -10,7 +10,7 @@ var koinex_data = mongoose.Schema({
     date: { type: Date },
 }, {
     collection: 'koinex_data',
-    strict: true
+    strict: false
 });
 
 var koinex_data = conn.model("koinex_data", koinex_data);

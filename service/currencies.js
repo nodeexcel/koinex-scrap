@@ -3,7 +3,6 @@ var _ = require('lodash');
 module.exports = {
     getCandles: function(data, totime, fromTime, interval, currency, callback) {
         var result = []
-        var i = 0
         //using loop till we filter all the arrray chunks
         do {
             // getting array chunks for every time interval
@@ -17,6 +16,7 @@ module.exports = {
                 //calculating volume by getting difference between last iteration volume and current iteration volume
                 //and storing the high,low and volume of last data in array
                 for (var a in prices) {
+
                     if (result.length != 0) {
                         result[result.length - 1].volume = prices[a].volume - volume;
                         result[result.length - 1].high = high;
@@ -49,8 +49,7 @@ module.exports = {
 
             //calculating start time and end time for fetching data in next iteration
             fromTime = new Date(totime.getTime() + 1000 * 60 * 1);
-            totime.setMinutes(fromTime.getMinutes() + interval - 1);
-            i++;
+            totime = new Date(totime.getTime() + 1000 * 60 * interval);
         } while (fromTime <= data[data.length - 1].date) //will stop the loop when start time of the interval wii be more then the time of last data
         //will return the callback if all data is calculated
         if (!fromTime <= data[data.length - 1].date) {
