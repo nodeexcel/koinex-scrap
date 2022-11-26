@@ -1,20 +1,6 @@
-var express = require('express');
-var app = express();
-var router = express.Router();
-var db = require('./koinex_db');
-var phantomjs = require('phantomjs');
+var db = require('../koinex_db');
 var moment = require('moment-timezone');
 var cron = require('node-cron');
-
-router.get('/fetch/koinex', function(req, res, next) {
-    db.fetch.find({}).exec(function(err, data) {
-        if (err) {
-            next(err);
-        } else if (data) {
-            res.json({ error: 0, message: "data found", data: data });
-        }
-    })
-});
 
 try {
     var Spooky = require('spooky');
@@ -31,27 +17,27 @@ function doScrap(URL, callback) {
             logLevel: 'debug',
             verbose: true,
         }
-    }, function(err) {
+    }, function (err) {
         if (err) {
             e = new Error('Failed to initialize SpookyJS');
             e.details = err;
             throw e;
         }
         spooky.start('https://koinex.in/api/ticker');
-        spooky.then(function() {
-            this.emit('output', this.evaluate(function() {
+        spooky.then(function () {
+            this.emit('output', this.evaluate(function () {
                 return JSON.parse(document.body.textContent);
             }));
         });
         spooky.run();
     });
-    spooky.on('error', function(e, stack) {
+    spooky.on('error', function (e, stack) {
         // console.error(e);
-        if (stack) {}
+        if (stack) { }
     });
-    spooky.on('console', function(line) {});
+    spooky.on('console', function (line) { });
 
-    spooky.on('output', function(body) {
+    spooky.on('output', function (body) {
         var prices = {
             "BTC/INR": body.prices.BTC,
             "ETH/INR": body.prices.ETH,
@@ -64,22 +50,20 @@ function doScrap(URL, callback) {
             price: prices,
             date: date_time,
         })
-        koinex_data.save(function(err) {
+        koinex_data.save(function (err) {
             if (err) {
                 res.status(400).json({ error: 1, message: "check email or password" });
             }
         })
         callback(prices);
     });
-    spooky.on('log', function(log) {
+    spooky.on('log', function (log) {
         if (log.space === 'remote') {
             console.log(log.message.replace(/ \- .*/, ''));
         }
     });
 }
 
-cron.schedule('*/1 * * * *', function() {
-    doScrap('', function(output) {})
+cron.schedule('*/1 * * * *', function () {
+    doScrap('', function (output) { })
 });
-
-module.exports = router;
